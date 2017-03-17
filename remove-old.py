@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-# Version 0.0.1
+version="0.0.2"
 
 # http://stackoverflow.com/questions/7217196/python-delete-old-files
-import os, time
+import os, time, argparse
 
 path = "\\inetpub\\wwwroot\\TLD"
-def flushdir(dir):
+def flushdir(dir, days_old):
     if not os.path.isdir(dir):
         print ("Folder", dir, "not found")
         return
@@ -14,22 +14,31 @@ def flushdir(dir):
     for f in os.listdir(dir):
         fullpath = os.path.join(dir, f)
         if os.path.isdir(fullpath):
-            flushdir(fullpath)
-        if os.stat(fullpath).st_mtime < (now - 1): #86400 = 1 day
+            flushdir(fullpath, days_old)
+        elif os.stat(fullpath).st_mtime < (now - 86400 * days_old): #86400 = 1 day
             if os.path.isfile(fullpath):
                 os.remove(fullpath)
                 print ("Removed:",fullpath)
     if not os.listdir(dir):
-        print ("Removed empty Folder:",dir)
+        print ("Removed empty folder:",dir)
         os.rmdir(dir)
 
-flushdir(path)
+parser = argparse.ArgumentParser(description='Remove old files from specified path.')
+parser.add_argument('path', metavar='PATH', help='folder path to recursively remove old files')
+parser.add_argument('--older-than-days', dest='days_old', required=True, type=int, action='store', help='files older than integer days will be removed')
+args = parser.parse_args()
+print ("Remove files older than", args.days_old, "days")
+print ("From",args.path)
+
+flushdir(args.path, args.days_old)
 
 
 # To Do:
-#   - pass parameter from command line - number of days old
+#   x pass parameter from command line - number of days old
 #   x do not look at the folder age, recursively search all sub folders
 #   x after completing one folder, check if the folder is empty, if so, remove the folder
 #   - ensure that hidden files are removed
 #   x ensure that spaces in file names / folder names are handled
 #   x non-existant path is handled gracefully
+#   - stats-only parm - sum of folders and files deleted output instead of every file removed
+#   - add version info
