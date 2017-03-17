@@ -5,8 +5,11 @@
 # http://stackoverflow.com/questions/7217196/python-delete-old-files
 import os, time
 
-path = "/inetpub/wwwroot/TLD/New Folder"
+path = "\\inetpub\\wwwroot\\TLD"
 def flushdir(dir):
+    if not os.path.isdir(dir):
+        print ("Folder", dir, "not found")
+        return
     now = time.time()
     for f in os.listdir(dir):
         fullpath = os.path.join(dir, f)
@@ -16,10 +19,9 @@ def flushdir(dir):
             if os.path.isfile(fullpath):
                 os.remove(fullpath)
                 print ("Removed:",fullpath)
-                pass
     if not os.listdir(dir):
         print ("Removed empty Folder:",dir)
-        os.remove(dir)
+        os.rmdir(dir)
 
 flushdir(path)
 
@@ -29,4 +31,5 @@ flushdir(path)
 #   x do not look at the folder age, recursively search all sub folders
 #   x after completing one folder, check if the folder is empty, if so, remove the folder
 #   - ensure that hidden files are removed
-#   - ensure that spaces in file names / folder names are handled
+#   x ensure that spaces in file names / folder names are handled
+#   x non-existant path is handled gracefully
