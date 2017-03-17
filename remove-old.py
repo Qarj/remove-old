@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
-version="0.0.4"
+version="0.1.0"
 
-# http://stackoverflow.com/questions/7217196/python-delete-old-files
 import os, time, argparse, stat
 
-path = "\\inetpub\\wwwroot\\TLD"
 def flushdir(dir, days_old, verbose):
     files_removed = 0
     folders_removed = 0
@@ -13,22 +11,24 @@ def flushdir(dir, days_old, verbose):
         print ("Folder", dir, "not found")
         return 0, 0
     now = time.time()
-    for f in os.listdir(dir):
-        fullpath = os.path.join(dir, f)
-        if os.path.isdir(fullpath):
-            files_removed, folders_removed = flushdir(fullpath, days_old, verbose)
-        elif os.stat(fullpath).st_mtime < (now - 86400 * days_old): #86400 = 1 day
-            if os.path.isfile(fullpath):
+    for file_name in os.listdir(dir):
+        file_full = os.path.join(dir, file_name)
+        if os.path.isdir(file_full):
+            sub_files_removed, sub_folders_removed = flushdir(file_full, days_old, verbose)
+            files_removed += sub_files_removed
+            folders_removed += sub_folders_removed
+        elif os.stat(file_full).st_mtime < (now - 86400 * days_old): #86400 = 1 day
+            if os.path.isfile(file_full):
                 try:
-                    os.remove(fullpath)
+                    os.remove(file_full)
                     if verbose:
-                        print ("Removed:",fullpath)
+                        print ("Removed:", file_full)
                     files_removed += 1
                 except PermissionError:
-                    os.chmod( fullpath, stat.S_IWRITE ) # remove read-only flag
-                    os.remove(fullpath)
+                    os.chmod(file_full, stat.S_IWRITE) # remove read-only flag
+                    os.remove(file_full)
                     if verbose:
-                        print ("Forcibly removed:",fullpath)
+                        print ("Forcibly removed:",file_full)
                     files_removed += 1
     if not os.listdir(dir):
         if verbose:
@@ -44,21 +44,7 @@ parser.add_argument('--version', action='version', version=version)
 parser.add_argument('--verbose', action='store_true', dest='verbose', default=False, help='Will output names of files and folders deleted')
 args = parser.parse_args()
 
-print ("Remove files older than", args.days_old, "days")
-print ("From", args.path)
-print ("Verbose:", args.verbose)
+print ("Remove files older than", args.days_old, "days from", args.path)
 
 files_removed, folders_removed = flushdir(args.path, args.days_old, args.verbose)
 print ("Removed",files_removed,"files and",folders_removed,"folders")
-
-# To Do:
-#   x pass parameter from command line - number of days old
-#   x do not look at the folder age, recursively search all sub folders
-#   x after completing one folder, check if the folder is empty, if so, remove the folder
-#   x ensure that hidden files are removed
-#   x ensure that read only files are removed
-#   x ensure that spaces in file names / folder names are handled
-#   x non-existant path is handled gracefully
-#   x --verbose - every file and folder name removed is shown
-#   x add version info
-#   - tidy up outputl
