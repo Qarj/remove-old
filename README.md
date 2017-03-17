@@ -20,7 +20,7 @@ Removes old files.
 C:\git\remove-old>remove-old.py C:\inetpub\wwwroot\DEV\2017\01\18 --older-than-days 10
 ```
 
-Output:
+stdout
 ```
 Remove files older than 10 days from C:\inetpub\wwwroot\DEV\2017\01\18
 Removed 1080 files and 27 folders
@@ -31,7 +31,7 @@ Removed 1080 files and 27 folders
 C:\git\remove-old>remove-old.py C:\inetpub\wwwroot\DEV\2017\01\31\All_Batches --older-than-days 5 --verbose
 ```
 
-Output:
+stdout
 ```
 Remove files older than 5 days from C:\inetpub\wwwroot\DEV\2017\01\31\All_Batches
 Removed: C:\inetpub\wwwroot\DEV\2017\01\31\All_Batches\CoursesWebsite\courses_CoursesHome-GUI_1001.txt
