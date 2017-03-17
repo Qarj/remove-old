@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-version="0.0.3"
+version="0.0.4"
 
 # http://stackoverflow.com/questions/7217196/python-delete-old-files
 import os, time, argparse, stat
@@ -31,6 +31,7 @@ def flushdir(dir, days_old):
 parser = argparse.ArgumentParser(description='Remove old files from specified path.')
 parser.add_argument('path', metavar='PATH', help='folder path to recursively remove old files')
 parser.add_argument('--older-than-days', dest='days_old', required=True, type=int, action='store', help='files older than integer days will be removed')
+parser.add_argument('--version', action='version', version=version)
 args = parser.parse_args()
 print ("Remove files older than", args.days_old, "days")
 print ("From",args.path)
@@ -47,4 +48,5 @@ print ("All done")
 #   x ensure that spaces in file names / folder names are handled
 #   x non-existant path is handled gracefully
 #   - stats-only parm - sum of folders and files deleted output instead of every file removed
-#   - add version info
+#   x add version info
+#   - tidy up outputl
