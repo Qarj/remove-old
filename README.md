@@ -43,7 +43,7 @@ Removed empty folder: C:\inetpub\wwwroot\DEV\2017\01\31\All_Batches\CoursesWebsi
 Removed: C:\inetpub\wwwroot\DEV\2017\01\31\All_Batches\CoursesWebsite.xml
 Removed: C:\inetpub\wwwroot\DEV\2017\01\31\All_Batches\Summary.xml
 Removed empty folder: C:\inetpub\wwwroot\DEV\2017\01\31\All_Batches
-Removed 6 files and 2 folders
+Removed 6 files and 2 folders, encountered 0 exceptions
 ```
 
 ### path with spaces
